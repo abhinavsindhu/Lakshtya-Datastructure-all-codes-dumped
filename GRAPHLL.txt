@@ -1,0 +1,150 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct NODELIST
+{
+    int NodeNo;
+    struct NODELIST *next;
+    struct EDGELIST *adj;
+};
+struct NODELIST *head=NULL;
+struct EDGELIST
+{
+    struct NODELIST *dest;
+    struct EDGELIST *Link;
+};
+struct EDGELIST *trEdLL;
+void createNodeL();
+void DisplayNodeL();
+void CreateEdgeL(struct NODELIST *,int);
+void DisplayEdgeL();
+int main()
+{   char ch;
+    int No;
+    createNodeL();
+    DisplayNodeL();
+    struct NODELIST *trNoLL=head;
+    struct EDGELIST *Edt;
+    while(trNoLL!=NULL)
+    { if(trNoLL->adj==NULL)
+      {
+      printf("\nDO YOU WANT TO ENTER THE ADJACENT NODE OF %d\n",trNoLL->NodeNo);
+      fflush(stdin);
+      scanf("%c",&ch);
+      }
+       while(ch=='y')
+       {
+      printf("\n ENTER NODE NO : ");
+
+      scanf("%d",&No);
+      CreateEdgeL(trNoLL,No);
+      printf("\nDO YOU WANT TO ENTER THE ADJACENT NODE OF %d\n",trNoLL->NodeNo);
+      fflush(stdin);
+      scanf("%c",&ch);
+       }
+      trNoLL=trNoLL->next;
+    }
+
+    printf("\nDISPLAY EDGE LIST\n");
+    DisplayEdgeL();
+
+    return 0;
+}
+void createNodeL()
+{
+    int n,i;
+    printf("ENTER THE NO OF NODES\n");
+    scanf("%d",&n);
+    struct NODELIST *temp;
+    for(i=0;i<n;i++)
+    {
+        if(head==NULL)
+        {
+            temp=(struct NODELIST*)malloc(sizeof(struct NODELIST));
+            if(temp==NULL)
+            {
+                printf("OUT OF MEMEORY");
+                exit(1);
+            }
+            temp->NodeNo=i+1;
+            temp->next=NULL;
+            temp->adj=NULL;
+            head=temp;
+
+        }
+        else
+        {
+            temp->next=(struct NODELIST*)malloc(sizeof(struct NODELIST));
+             if(temp->next==NULL)
+            {
+                printf("OUT OF MEMEORY");
+                exit(1);
+            }
+            temp=temp->next;
+            temp->NodeNo=i+1;
+            temp->next=NULL;
+            temp->adj=NULL;
+
+        }
+    }
+}
+void CreateEdgeL(struct NODELIST *tr,int No)
+{
+
+  struct NODELIST *SEA=head;
+  struct EDGELIST *te;
+  if(tr->adj==NULL)
+  {
+     tr->adj=(struct EDGELIST*)malloc(sizeof(struct EDGELIST));
+     while(SEA->NodeNo!=No)
+     {
+         SEA=SEA->next;
+     }
+     te=tr->adj;
+     te->dest=SEA;
+     te->Link=NULL;
+  }
+  else
+  {
+      while(SEA->NodeNo!=No)
+     {
+         SEA=SEA->next;
+     }
+     te=tr->adj;
+     while(te->Link!=NULL)
+     {
+         te=te->Link;
+     }
+     te->Link=(struct EDGELIST*)malloc(sizeof(struct EDGELIST));
+     te=te->Link;
+     te->dest=SEA;
+     te->Link=NULL;
+
+  }
+}
+void DisplayNodeL()
+{
+    struct NODELIST *trav=head;
+    while(trav!=NULL)
+    {
+        printf("NODE NO=%d ",trav->NodeNo);
+        //if(trav->adj==NULL)
+         //   printf("NULL HA RAA\n");
+        trav=trav->next;
+    }
+}
+void DisplayEdgeL()
+{  struct EDGELIST *Ete;
+   struct NODELIST *trav=head;
+while(trav!=NULL)
+{
+
+ printf("\nEDGELIST OF NODENO=%d ARE FOLLWINGS\n\n",trav->NodeNo);
+ Ete=trav->adj;
+  while(Ete!=NULL)
+  {
+      printf("%d ",Ete->dest->NodeNo);
+      Ete=Ete->Link;
+  }
+  trav=trav->next;
+}
+}
